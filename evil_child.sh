@@ -1,2 +1,2 @@
-sleep 3
+sleep 1
 exit 666

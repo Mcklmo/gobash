@@ -1,29 +1,27 @@
-# gobash
+# Gobash
 
-A simple tool that runs multiple bash scripts in parallel and waits for all of them to finish. It requires at least one parent script that will wait for the children to finish successfully.
+A tool to run shell scripts with Docker.
+
+It runs all children in parallel and waits for all of them to finish before exiting.
+
+If any child script exits with a non-zero exit code, all other children and the entire script will exit immediately with the same exit code.
 
 ## Usage
 
 ```bash
-go run main.go parent1.sh parent2.sh --children child1.sh child2.sh evil_child.sh
+PARENT_SCRIPT=docker.sh
+CHILD_SCRIPT=go.sh
+
+docker run \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$(pwd)":"$(pwd)" \
+  -w "$(pwd)" \
+  -e HOST_PWD="$(pwd)" \
+  mcklmo/gobash \
+  $PARENT_SCRIPT --children $CHILD_SCRIPT
 ```
 
-The first arguments are the parent scripts that will wait for the children to finish. At least one parent script is required.
-
-`--children` is optional and can be used to specify multiple scripts that will be run in parallel.
-
-### Docker
-
-```bash
-docker run --rm \
-  -v $(pwd):/scripts \
-  -v /var/run/docker.sock:/var/run/docker.sock  mcklmo/gobash \
-  /scripts/parent1.sh /scripts/parent2.sh --children /scripts/child1.sh /scripts/child2.sh
-```
-
-## Maintenance
-
-### Push new version
+## Deployment
 
 ```bash
 docker build -t mcklmo/gobash .

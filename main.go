@@ -23,6 +23,7 @@ func main() {
 			isChildren = true
 			continue
 		}
+
 		if isChildren {
 			childScripts = append(childScripts, arg)
 		} else {
@@ -50,6 +51,7 @@ func main() {
 			} else {
 				fmt.Printf("Cannot access script file '%s': %v\n", absPath, err)
 			}
+
 			os.Exit(1)
 		}
 	}
@@ -81,6 +83,7 @@ func main() {
 			cmd := exec.CommandContext(ctx, "bash", absPath)
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
+			cmd.Dir = filepath.Dir(absPath)
 
 			err = cmd.Run()
 			if err != nil {
@@ -121,6 +124,7 @@ func main() {
 		cmd := exec.Command("bash", absPath)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		cmd.Dir = filepath.Dir(absPath)
 
 		err = cmd.Run()
 		if err != nil {

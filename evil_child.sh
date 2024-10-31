@@ -1,2 +1,1 @@
-sleep 1
-exit 666
+exit 1
